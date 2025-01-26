@@ -1,0 +1,98 @@
+---
+- name: Deploy Moodle front
+  hosts: frontend_master
+  become: yes
+  vars_files:
+    - ../vars/variables.yml
+
+  tasks:
+      - name: Eliminar instalaciones anteriores de wp-cli
+        file:
+          path: /tmp/wp-cli.phar
+          state: absent
+
+      - name: Descargar WP-CLI
+        get_url:
+          url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          dest: /tmp/wp-cli.phar
+          mode: '0755'
+
+      - name: Mover wp-cli.phar a /usr/local/bin/wp
+        command: mv /tmp/wp-cli.phar /usr/local/bin/wp
+        args:
+          creates: /usr/local/bin/wp
+
+      - name: Eliminar contenido anterior de WordPress
+        file:
+          path: /var/www/html/
+          state: absent
+
+      - name: Descargar e instalar WordPress
+        command: wp core download --locale=es_ES --path={{ wp.path }} --allow-root
+        args:
+          creates: "{{ wp.path }}/wp-config.php"
+
+      - name: Crear el archivo de configuración de WordPress
+        command: >
+          wp config create 
+          --dbname={{ db.name }} 
+          --dbuser={{ db.user }} 
+          --dbpass={{ db.pass }} 
+          --dbhost={{ privateip.back }} 
+          --path={{ wp.path }} 
+          --allow-root
+        args:
+          creates: "{{ wp.path }}/wp-config.php"
+
+      - name: Instalar WordPress
+        command: >
+          wp core install 
+          --url="https://{{ certbot.url }}"" 
+          --title="{{ wp.title }}" 
+          --admin_user={{ wp.user }} 
+          --admin_password={{ wp.pass }} 
+          --admin_email={{ wp.email }} 
+          --path={{ wp.path }} 
+          --allow-root
+        args:
+          creates: "{{ wp.path }}/wp-content"
+
+      - name: Establecer permisos de WordPress
+        file:
+          path: /var/www/html
+          owner: www-data
+          group: www-data
+          recurse: yes
+
+      - name: Configurar enlaces permanentes de WordPress
+        command: wp rewrite structure '/%postname%/' --path={{ wp.path }} --allow-root
+
+      - name: Copiar archivo .htaccess para activar permalinks
+        copy:
+          src: ../htaccess/.htaccess
+          dest: "{{ wp.path }}/.htaccess"
+          owner: www-data
+          group: www-data
+          mode: '0644'
+
+      - name: Instalar y activar el tema Mindscape
+        command: wp theme install mindscape --activate --path={{ wp.path }} --allow-root
+
+      - name: Instalar y activar el plugin WPS Hide Login
+        command: wp plugin install wps-hide-login --activate --path={{ wp.path }} --allow-root
+
+      - name: Configurar la URL secreta de wp-admin
+        command: wp option update whl_page {{ wp.nombre_secreto }} --path={{ wp.path }} --allow-root
+
+      - name: Agregar configuración HTTPS en wp-config.php
+        lineinfile:
+          path: /var/www/html/wp-config.php
+          line: "$_SERVER['HTTPS'] = 'on';"
+          insertafter: "COLLATE"
+
+      - name: Establecer permisos finales de WordPress
+        file:
+          path: /var/www/html
+          owner: www-data
+          group: www-data
+          recurse: yes
