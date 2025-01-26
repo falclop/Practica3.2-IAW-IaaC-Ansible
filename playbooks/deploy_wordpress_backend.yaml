@@ -3,7 +3,7 @@
   hosts: backend
   become: yes
   vars_files:
-    - ../vars/variables.yml
+    - ../vars/variables.yaml
     
   tasks:
     - name: Borrar la base de datos
@@ -21,9 +21,9 @@
     - name: Crear el usuario de la base de datos
       mysql_user:         
         name: "{{ db.user }}"
-        password: "{{ db.password }}"
+        password: "{{ db.pass }}"
         priv: "{{ db.name }}.*:ALL"
-        host: "{{ privateip.frontnet }}" #Aquí usamos la red completa 172.31.0.0/16
+        host: "{{ ip.net }}" #Aquí usamos la red completa 172.31.0.0/16
         state: present
         login_unix_socket: /var/run/mysqld/mysqld.sock 
 

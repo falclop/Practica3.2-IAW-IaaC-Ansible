@@ -3,7 +3,7 @@
   hosts: frontend
   become: yes
   vars_files:
-    - ../vars/variables.yml
+    - ../vars/variables.yaml
 
   tasks:
     - name: Actualizar el repositorio de paquetes
@@ -29,7 +29,7 @@
         mode: '0755'
 
     - name: Montar el sistema de archivos NFS temporalmente
-      command: mount {{ privateip.nfsserver }}:/var/www/html /var/www/html
+      command: mount {{ ip.nfsserver }}:/var/www/html /var/www/html
       args:
         creates: /var/www/html/index.php  # Verifica que el montaje no se repita
 
@@ -44,7 +44,7 @@
       lineinfile:
         path: /etc/fstab
         insertafter: 'UEFI'
-        line: "{{ privateip.nfsserver }}:/var/www/html /var/www/html nfs rsize=8192,wsize=8192,timeo=14,intr,noexec,nosuid"
+        line: "{{ ip.nfsserver }}:/var/www/html /var/www/html nfs rsize=8192,wsize=8192,timeo=14,intr,noexec,nosuid"
         state: present
 
     - name: Montar todos los sistemas de archivos definidos en fstab

@@ -22,8 +22,8 @@
     - name: Solicitar y configurar certificado SSL/TLS a Let's Encrypt con certbot
       command:
         certbot --nginx \
-        -m {{ certbot.email }} \
+        -m {{ cerbot.email }} \
         --agree-tos \
         --no-eff-email \
         --non-interactive \
-        -d {{ certbot.url }}
+        -d {{ cerbot.url }}

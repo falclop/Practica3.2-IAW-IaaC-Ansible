@@ -3,7 +3,7 @@
   hosts: nfs_server
   become: yes
   vars_files:
-    - ../vars/variables.yml
+    - ../vars/variables.yaml
 
   tasks:
     - name: Actualizar el repositorio de paquetes
@@ -40,7 +40,7 @@
       replace:
         path: /etc/exports
         regexp: 'FRONTEND_NETWORK'
-        replace: '{{ privateip.frontnet }}'
+        replace: "{{ ip.net }}"
 
     - name: Reiniciar el servicio NFS
       systemd:

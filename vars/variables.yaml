@@ -1,5 +1,5 @@
 cerbot:
-  mail: "fabian@fabian.es"
+  email: "fabian@fabian.es"
   url: "practica3-2ansible.zapto.org"
 
 db:
@@ -7,11 +7,11 @@ db:
   pass: "1234"
   name: "wp_db"
 
-privateip:
+ip:
   front1: "172.31.47.46"
   front2: "172.31.39.183"
-  back: "172.31.45.247"
-  frontnet: "172.31.0.0/16"
+  back: "172.31.34.70"
+  net: "172.31.0.0/16"
   nfsserver: "172.31.47.110"
 
 wp:

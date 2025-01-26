@@ -11,7 +11,7 @@
 [loadbalancer]
 172.31.39.227
 
-[nfs]
+[nfs_server]
 172.31.47.110
 
 [all:vars]

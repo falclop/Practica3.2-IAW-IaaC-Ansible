@@ -3,7 +3,7 @@
   hosts: frontend_master
   become: yes
   vars_files:
-    - ../vars/variables.yml
+    - ../vars/variables.yaml
 
   tasks:
       - name: Eliminar instalaciones anteriores de wp-cli
@@ -23,39 +23,34 @@
           creates: /usr/local/bin/wp
 
       - name: Eliminar contenido anterior de WordPress
-        file:
-          path: /var/www/html/
-          state: absent
+        # En esta línea usamos command en vez de file y state:absent ya que como necesitamos borrar el contenido 
+        # y el directorio esta siendo usado por nfs, lo hacemos para evitar fallos
+        shell: rm -rf /var/www/html/*
 
+        # A partir de aquí vamos a usar el comando command, ya que no exiten comandos nativos en ansible para usar el CLI de wordpress
       - name: Descargar e instalar WordPress
         command: wp core download --locale=es_ES --path={{ wp.path }} --allow-root
-        args:
-          creates: "{{ wp.path }}/wp-config.php"
 
       - name: Crear el archivo de configuración de WordPress
-        command: >
-          wp config create 
-          --dbname={{ db.name }} 
-          --dbuser={{ db.user }} 
-          --dbpass={{ db.pass }} 
-          --dbhost={{ privateip.back }} 
-          --path={{ wp.path }} 
+        command:
+          wp config create \
+          --dbname={{ db.name }} \ 
+          --dbuser={{ db.user }} \
+          --dbpass={{ db.pass }} \
+          --dbhost={{ ip.back }} \
+          --path={{ wp.path }} \
           --allow-root
-        args:
-          creates: "{{ wp.path }}/wp-config.php"
 
       - name: Instalar WordPress
-        command: >
-          wp core install 
-          --url="https://{{ certbot.url }}"" 
-          --title="{{ wp.title }}" 
-          --admin_user={{ wp.user }} 
-          --admin_password={{ wp.pass }} 
-          --admin_email={{ wp.email }} 
-          --path={{ wp.path }} 
+        command:
+          wp core install \
+          --url="https://{{ cerbot.url }}" \
+          --title="{{ wp.title }}" \
+          --admin_user={{ wp.user }} \ 
+          --admin_password={{ wp.pass }} \
+          --admin_email={{ wp.email }} \
+          --path={{ wp.path }} \
           --allow-root
-        args:
-          creates: "{{ wp.path }}/wp-content"
 
       - name: Establecer permisos de WordPress
         file:
@@ -69,7 +64,7 @@
 
       - name: Copiar archivo .htaccess para activar permalinks
         copy:
-          src: ../htaccess/.htaccess
+          src: ../templates/.htaccess
           dest: "{{ wp.path }}/.htaccess"
           owner: www-data
           group: www-data

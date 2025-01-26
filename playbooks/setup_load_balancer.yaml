@@ -27,7 +27,7 @@
 
     - name: Copiar configuración del balanceador de carga
       copy:
-        src: ../conf/load-balancer.conf
+        src: ../templates/load-balancer.conf
         dest: /etc/nginx/sites-available/load-balancer.conf
         owner: root
         group: root
@@ -39,9 +39,9 @@
         regexp: "{{ item.regex }}"
         replace: "{{ item.value }}"
       loop:
-        - { regex: 'IP_FRONTEND_1', value: '{{ privateip.front1 }}' }
-        - { regex: 'IP_FRONTEND_2', value: '{{ privateip.front2 }}' }
-        - { regex: 'LE_DOMAIN', value: '{{ certbot.url }}' }
+        - { regex: 'IP_FRONTEND_1', value: '{{ ip.front1 }}' }
+        - { regex: 'IP_FRONTEND_2', value: '{{ ip.front2 }}' }
+        - { regex: 'LE_DOMAIN', value: '{{ cerbot.url }}' }
 
     - name: Habilitar el virtualhost del balanceador de carga si no existe
       file:
