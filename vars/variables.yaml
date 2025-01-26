@@ -1,6 +1,6 @@
 cerbot:
-  le_mail: "fabian@fabian.es"
-  le_url: "practica3-2ansible.zapto.org"
+  mail: "fabian@fabian.es"
+  url: "practica3-2ansible.zapto.org"
 
 db:
   user: "fabian"
