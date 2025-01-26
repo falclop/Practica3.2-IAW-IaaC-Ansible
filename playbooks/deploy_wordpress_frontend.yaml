@@ -23,7 +23,7 @@
           creates: /usr/local/bin/wp
 
       - name: Eliminar contenido anterior de WordPress
-        # En esta línea usamos command en vez de file y state:absent ya que como necesitamos borrar el contenido 
+        # En esta línea usamos shell en vez de file y state:absent ya que como necesitamos borrar el contenido 
         # y el directorio esta siendo usado por nfs, lo hacemos para evitar fallos
         shell: rm -rf /var/www/html/*
 
