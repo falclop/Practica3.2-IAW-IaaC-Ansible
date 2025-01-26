@@ -1,0 +1,17 @@
+[frontend]
+172.31.47.46
+172.31.39.183
+
+[backend]
+172.31.34.70
+
+[loadbalancer]
+172.31.39.227
+
+[nfs]
+172.31.47.110
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/ubuntu/lab/vockey.pem
+ansible_ssh_common_args='-o StrictHostKeyChecking=accept-new'

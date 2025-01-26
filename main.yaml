@@ -1,0 +1,9 @@
+---
+ - import_playbook: playbooks/install_lamp_backend.yml
+ - import_playbook: playbooks/install_lamp_frontend.yml
+#  - import_playbook: playbooks/setup_load_balancer.yml
+#  - import_playbook: playbooks/setup_nfs_server.yml
+#  - import_playbook: playbooks/deploy_backend.yml
+#  - import_playbook: playbooks/deploy_frontend.yml
+#  - import_playbook: playbooks/setup_nfs_client
+#  - import_playbook: playbooks/setup_letsencrypt_certificate.yml
