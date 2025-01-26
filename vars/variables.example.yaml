@@ -1,27 +1,24 @@
 cerbot:
-  le_mail:
-  le_url:
+  email:
+  url:
 
 db:
   user:
-  pass:
-  name:
+  pass: 
+  name: 
 
-privateip:
+ip:
   front1:
   front2:
-  back:
-  frontnet:
-  nfsserver:
+  back: 
+  net: 
+  nfsserver: 
 
 wp:
-  wp_db_user:
-  wp_db_pass:
-  wp_db_name:
-  wp_db_host:
-  wp_path:
-  wp_user:
-  wp_pass:
-  wp_email:
-  wp_title:
+  db_host:
+  path:
+  user:
+  pass:
+  email:
+  title:
   nombre_secreto:
